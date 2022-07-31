@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import altair as alt
 import plotly.express as px
+from streamlit_option_menu import option_menu
 
 # st.markdown('<div style="text-align: justify;">Hello World!</div>', unsafe_allow_html=True)
 
@@ -19,17 +20,26 @@ float = pd.DataFrame(list(zip(
     float_1["MI_pendapatan_premi"]-float_1["MI_klaim_terbayar"]
 )), columns = ["bulan","LI_float","GI_float","RE_float","SI_float","MI_float"])
 
-select = st.sidebar.selectbox(
-    "Contents:",
-    ("Main", "Glossary", "References")
-)
+with st.sidebar:
+    st.header("Navigation")
+    select = option_menu(
+        menu_title=None,
+        options=["Project", "Statistical Theory", "Glossary", "Links"],
+        icons=["kanban","bar-chart-line","book","link"],
+        styles={"nav-link":{"font-size":"14px"}}
+    )
+    st.header("About")
+    st.info("This web app is made by Pamella Cathryn. You can follow me on [LinkedIn](https://linkedin.com/in/pamellacathryn) | [Instagram](https://instagram.com/pamellacathryn) | [GitHub](https://github.com/pamellacathryn)")
 
-#latar belakang
-st.markdown("<h1 style='text-align: center; '>Apakah Industri Asuransi di Indonesia Survive selama Pandemi?</h1>", unsafe_allow_html=True)
-st.markdown("<h6 style='text-align: center; '>Pamella Cathryn - DQLab Tetris Program Batch II</h6>", unsafe_allow_html=True)
-st.write("")
 
-if select == "Main":
+
+if select == "Project":
+    # latar belakang
+    st.markdown("<h1 style='text-align: center; '>Apakah Industri Asuransi di Indonesia Survive selama Pandemi?</h1>",
+                unsafe_allow_html=True)
+    st.markdown("<h6 style='text-align: center; '>Pamella Cathryn - DQLab Tetris Program Batch II</h6>",
+                unsafe_allow_html=True)
+    st.write("")
     st.header('Latar Belakang')
     kolom1, kolom2 = st.columns([1,2])
     with kolom1:
@@ -407,14 +417,15 @@ elif select == "Glossary":
         st.markdown('<div style="text-align: justify;">Merupakan program asuransi yang dijalankan oleh PT. ASABRI (Persero), PT. Taspen (Persero) dan PT. Jasa Raharja (Persero)</div>', unsafe_allow_html=True)
         st.write("")
 
-elif select == "References":
+elif select == "Links":
     st.subheader("Data Sources")
     st.write("OJK: https://www.ojk.go.id/id/kanal/iknb/data-dan-statistik/asuransi/")
     st.write("DataIndonesia.id: https://dataindonesia.id/bursa-keuangan/detail/jumlah-perusahaan-asuransi-indonesia-capai-149-unit-pada-2021")
     st.write("")
-    st.subheader("Links")
-    st.write("https://www.simulasikredit.com/bagaimana-perusahaan-asuransi-mendapat-uang-ini-penjelasannya/")
-    st.write("https://ifg.id/id/blog/menilik-dampak-pandemi-pada-industri-asuransi-dan-prospeknya")
+    st.subheader("References")
+    st.markdown("_Bagaimana Perusahaan asuransi Mendapat Uang? Ini Penjelasannya!_ Simulasi Kredit. (n.d.). Retrieved July 27, 2022, from https://www.simulasikredit.com/bagaimana-perusahaan-asuransi-mendapat-uang-ini-penjelasannya/ ")
+    st.markdown("_Menilik Dampak Pandemi Pada industri asuransi dan prospeknya._ Indonesia Financial Group. (2021, June 3). Retrieved August 27, 2022, from https://ifg.id/id/blog/menilik-dampak-pandemi-pada-industri-asuransi-dan-prospeknya ")
+    st.markdown("Walpole, R. E., & Myers, R. H. (1985). _Probability and statistics for engineers and scientists._ New York: Macmillan.")
     st.write("")
 
     st.subheader("Download Cleaned Data")
