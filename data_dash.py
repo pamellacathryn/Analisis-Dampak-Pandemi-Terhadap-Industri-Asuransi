@@ -24,7 +24,8 @@ with st.sidebar:
         menu_title=None,
         options=["Project", "Statistical Theory", "Glossary", "Links"],
         icons=["kanban","bar-chart-line","book","link"],
-        styles={"nav-link":{"font-size":"14px"}}
+        styles={"container": {"padding": "5!important", "background-color": "#262730"},
+                "nav-link":{"font-size":"14px"}}
     )
     st.header("About")
     st.info("This web app is made by Pamella Cathryn. You can follow me on [LinkedIn](https://linkedin.com/in/pamellacathryn) | [Instagram](https://instagram.com/pamellacathryn) | [GitHub](https://github.com/pamellacathryn)")
