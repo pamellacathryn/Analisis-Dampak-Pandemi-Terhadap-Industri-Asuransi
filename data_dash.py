@@ -22,8 +22,8 @@ with st.sidebar:
     st.header("Navigation")
     select = option_menu(
         menu_title=None,
-        options=["Project", "Statistical Theory", "Glossary", "Links"],
-        icons=["kanban","bar-chart-line","book","link"],
+        options=["Project","Glossary", "Links"],
+        icons=["kanban","book","link"],
         styles={"nav-link":{"font-size":"14px"}}
     )
     st.header("About")
@@ -62,7 +62,7 @@ if select == "Project":
     col2.markdown('<div style="text-align: justify;">Dikutip dari Badan Pusat Statistik, saat ini (per 31 Desember 2021) terdapat 149 unit perusahaan asuransi konvensional di Indonesia. Secara rinci, sebanyak 77 unit merupakan perusahaan asuransi umum, 60 unit perusahaan asuransi jiwa, 7 unit perusahaan reasuransi, 2 unit perusahaan penyelenggara program asuransi sosial dan jaminan sosial tenaga kerja, serta 3 perusahaan sisanya merupakan penyelenggara asuransi untuk PNS dan TNI/Polri.</div>', unsafe_allow_html=True)
 
     #linechart function
-    def get_chart(data,x,color,judul,comment):
+    def get_chart(data,x,color,judul,comment,ylabel):
         a = data.columns[x]
         hover = alt.selection_single(
             fields=["bulan"],
@@ -75,7 +75,7 @@ if select == "Project":
             .mark_line()
             .encode(
                 x="bulan",
-                y=a,
+                y=alt.Y(a, title=ylabel),
                 color=alt.value(color),
             )
         )
@@ -131,7 +131,7 @@ if select == "Project":
         posisi = -215
         p = 5
         color = '#E76F51'
-    chart = get_chart(line_data1,p,color,"","Premi Bruto")
+    chart = get_chart(line_data1,p,color,"","Premi Bruto",'Premi Bruto (in Millions Rupiah)')
     ANNOTATIONS = [
         ("Mar 2020", "Awal Pandemi Covid-19"),
     ]
@@ -178,7 +178,7 @@ if select == "Project":
         posisi = -215
         p = 5
         color = '#E76F51'
-    chart = get_chart(line_data2,p,color,"","Klaim Bruto")
+    chart = get_chart(line_data2,p,color,"","Klaim Bruto",'Klaim Bruto (in Millions Rupiah)')
     ANNOTATIONS = [
         ("Mar 2020", "Awal Pandemi Covid-19"),
     ]
@@ -200,7 +200,7 @@ if select == "Project":
         use_container_width=True)
     st.write('')
 
-    def get_chart3(data,color,ylabel):
+    def get_chart3(data,color):
         hover = alt.selection_single(
             fields=["bulan"],
             nearest=True,
@@ -212,7 +212,7 @@ if select == "Project":
             .mark_line()
             .encode(
                 x="bulan",
-                y=alt.Y("in Millions Rupiah", title=ylabel),
+                y=alt.Y("in Millions Rupiah", title='Insurance Float (in Millions Rupiah)'),
                 color=alt.value(color),
             )
         )
@@ -291,33 +291,28 @@ if select == "Project":
         data1 = data1.rename(columns={'LI_float':'in Millions Rupiah'})
         data = data1
         color = '#457b9d'
-        ylabel = 'Life Insurance (in Millions Rupiah)'
     elif choose == 'General Insurance':
         posisi = -220
         data2 = data2.rename(columns={'GI_float':'in Millions Rupiah'})
         data = data2
         color = '#2A9D8F'
-        ylabel = 'General Insurance (in Millions Rupiah)'
     elif choose == 'Reinsurance':
         posisi = -150
         data3 = data3.rename(columns={'RE_float':'in Millions Rupiah'})
         data = data3
         color = '#E9C46A'
-        ylabel = 'Reinsurance (in Millions Rupiah)'
     elif choose == 'Social Insurance':
         posisi = -180
         data4 = data4.rename(columns={'SI_float':'in Millions Rupiah'})
         data = data4
         color = '#F4A261'
-        ylabel = 'Social Insurance (in Millions Rupiah)'
     elif choose == 'Mandatory Insurance':
         posisi = -30
         data5 = data5.rename(columns={'MI_float':'in Millions Rupiah'})
         data = data5
         color = '#E76F51'
-        ylabel = 'Mandatory Insurance (in Millions Rupiah)'
 
-    chart = get_chart3(data,color,ylabel)
+    chart = get_chart3(data,color)
     ANNOTATIONS = [
         ("Mar 2020", "Awal Pandemi Covid-19"),
     ]
