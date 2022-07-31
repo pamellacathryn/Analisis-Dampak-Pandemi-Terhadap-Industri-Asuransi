@@ -4,8 +4,6 @@ import altair as alt
 import plotly.express as px
 from streamlit_option_menu import option_menu
 
-# st.markdown('<div style="text-align: justify;">Hello World!</div>', unsafe_allow_html=True)
-
 # dataset
 perusahaan = pd.read_csv('perusahaan.csv')
 premi = pd.read_csv('pendapatan_premi.csv')
@@ -353,7 +351,7 @@ if select == "Project":
         st.markdown('<div style="text-align: justify;">Asuransi ASN, TNI/POLRI, Kecelakaan Penumpang Umum dan Lalu Lintas Jalan memang tidak bertujuan untuk mencari keuntungan, melainkan dibuat sebagai hak-hak yang disediakan oleh negara. Pada control chart, terlihat bahwa insurance float cenderung terus turun dari sebelum pandemi sampai setelah pandemi dimulai. Hal ini disebabkan oleh terus menaiknya jumlah klaim walaupun premi yang masuk cenderung konstan. Menurunnya insurance float setelah pandemi menembus garis batas bawah (OOC), sehingga dapat disimpulkan bahwa pandemi covid-19 memberikan dampak yang signifikan terhadap kestabilan pemasukan float mandatory insurance.</div>', unsafe_allow_html=True)
 
 elif select == "Glossary":
-    st.header("Glossary")
+    st.subheader("Glossary")
     a=1
     b=4
     koloms1, koloms2 = st.columns([a,b])
