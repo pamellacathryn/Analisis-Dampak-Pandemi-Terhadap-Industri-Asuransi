@@ -35,7 +35,7 @@ if select == "Project":
     # latar belakang
     st.markdown("<h1 style='text-align: center; '>Apakah Industri Asuransi di Indonesia Survive selama Pandemi?</h1>",
                 unsafe_allow_html=True)
-    st.markdown("<h6 style='text-align: center; '>Pamella Cathryn - DQLab Tetris Program Batch II</h6>",
+    st.markdown("<h6 style='text-align: center; '>111 Pamella Cathryn - DQLab Tetris Program Batch II</h6>",
                 unsafe_allow_html=True)
     st.write("")
     st.header('Latar Belakang')
