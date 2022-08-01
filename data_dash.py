@@ -351,13 +351,13 @@ elif select == "Glossary":
     b=4
     koloms1, koloms2 = st.columns([a,b])
     with koloms1:
-        st.write("Asuransi")
+        st.markdown('Asuransi (_Insurance_)')
     with koloms2:
         st.markdown('<div style="text-align: justify;">Perjanjian antara dua pihak, yaitu perusahaan asuransi dan pemegang polis, yang menjadi dasar bagi penerimaan premi oleh perusahaan asuransi sebagai imbalan untuk memberikan penggantian kepada tertanggung atau pemegang polis karena kerugian, kerusakan, biaya yang timbul, kehilangan keuntungan, atau tanggung jawab hukum kepada pihak ketiga yang mungkin diderita tertanggung atau pemegang polis karena terjadinya suatu peristiwa yang tidak pasti; atau memberikan pembayaran yang didasarkan pada meninggalnya tertanggung atau pembayaran yang didasarkan pada hidupnya tertanggung dengan manfaat yang besarnya telah ditetapkan dan/atau didasarkan pada hasil pengelolaan dana.</div>', unsafe_allow_html=True)
         st.write("")
     koloms1, koloms2 = st.columns([a, b])
     with koloms1:
-        st.write("Premi")
+        st.markdown('Premi (_Premium_)')
     with koloms2:
         st.markdown(
             '<div style="text-align: justify;">Biaya yang ditanggung dan harus dibayarkan nasabah dalam jangka waktu tertentu sesuai kesepakatan dengan pihak perusahaan asuransi.</div>',
@@ -365,7 +365,7 @@ elif select == "Glossary":
         st.write("")
     koloms1, koloms2 = st.columns([a, b])
     with koloms1:
-        st.write("Klaim")
+        st.markdown('Klaim (_Claim_)')
     with koloms2:
         st.markdown(
             '<div style="text-align: justify;">Tuntutan dari pihak tertanggung karena adanya kontrak perjanjian dengan pihak asuransi untuk menjamin pembayaran ganti rugi selama pembayaran premi telah dilakukan oleh pihak tertanggung.</div>',
@@ -373,7 +373,7 @@ elif select == "Glossary":
         st.write("")
     koloms1, koloms2 = st.columns([a, b])
     with koloms1:
-        st.write("Insurance Float")
+        st.markdown('_Insurance Float_')
     with koloms2:
         st.markdown(
             '<div style="text-align: justify;">Selisih antara premi yang dikumpulkan oleh perusahaan asuransi dengan klaim yang harus dibayarkan pada nasabah.</div>',
@@ -381,31 +381,33 @@ elif select == "Glossary":
         st.write("")
     koloms1, koloms2 = st.columns([a,b])
     with koloms1:
-        st.write("Asuransi Jiwa")
+        st.markdown('Asuransi Jiwa (_Life Insurance_)')
     with koloms2:
         st.markdown('<div style="text-align: justify;">Usaha yang menyelenggarakan jasa penanggulangan risiko dengan memberikan pembayaran kepada pemegang polis, tertanggung, atau pihak Lain yang berhak dalam hal tertanggung meninggal dunia atau tetap hidup, atau pembayaran lain kepada pemegang polis, tertanggung, atau pihak lain yang berhak pada waktu tertentu yang diatur dalam perjanjian, yang besarnya telah ditetapkan dan/atau didasarkan pada hasil pengelolaan dana.</div>', unsafe_allow_html=True)
         st.write("")
     koloms1, koloms2 = st.columns([a,b])
     with koloms1:
-        st.write("Asuransi Umum")
+        st.write("")
+        st.markdown('Asuransi Umum (_General Insurance_)')
     with koloms2:
         st.markdown('<div style="text-align: justify;">Usaha jasa pertanggungan risiko yang memberikan penggantian kepada tertanggung atau pemegang polis karena kerugian, kerusakan, biaya yang timbul, kehilangan keuntungan, atau tanggung jawab hukum kepada pihak ketiga yang mungkin diderita tertanggung atau pemegang polis karena terjadinya suatu peristiwa yang tidak pasti.</div>', unsafe_allow_html=True)
         st.write("")
     koloms1, koloms2 = st.columns([a,b])
     with koloms1:
-        st.write("Reasuransi")
+        st.markdown('Reasuransi (_Reinsurance_)')
     with koloms2:
         st.markdown('<div style="text-align: justify;">Usaha jasa pertanggungan ulang terhadap risiko yang dihadapi oleh perusahaan asuransi, perusahaan penjaminan, atau perusahaan reasuransi lainnya.</div>', unsafe_allow_html=True)
         st.write("")
     koloms1, koloms2 = st.columns([a,b])
     with koloms1:
-        st.write("Asuransi Sosial")
+        st.write("")
+        st.markdown('Asuransi Sosial (_Social Insurance_)')
     with koloms2:
         st.markdown('<div style="text-align: justify;">Asuransi yang menyediakan jaminan sosial bagi anggota masyarakat yang dibentuk oleh pemerintah bedasarkan peraturan-peraturan yang mengatur hubungan antara pihak asuransi dengan seluruh golongan masyarakat.</div>', unsafe_allow_html=True)
         st.write("")
     koloms1, koloms2 = st.columns([a,b])
     with koloms1:
-        st.write("Asuransi ASN, TNI/POLRI, Kecelakaan Penumpang Umum dan Lalu Lintas Jalan")
+        st.markdown('Asuransi ASN, TNI/POLRI, Kecelakaan Penumpang Umum dan Lalu Lintas Jalan (_Mandatory Insurance_)')
     with koloms2:
         st.markdown('<div style="text-align: justify;">Merupakan program asuransi yang dijalankan oleh PT. ASABRI (Persero), PT. Taspen (Persero) dan PT. Jasa Raharja (Persero)</div>', unsafe_allow_html=True)
         st.write("")
