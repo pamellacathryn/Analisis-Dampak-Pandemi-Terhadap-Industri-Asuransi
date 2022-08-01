@@ -29,8 +29,6 @@ with st.sidebar:
     st.header("About")
     st.info("This web app is made by Pamella Cathryn. You can follow me on [LinkedIn](https://linkedin.com/in/pamellacathryn) | [Instagram](https://instagram.com/pamellacathryn) | [GitHub](https://github.com/pamellacathryn)")
 
-
-
 if select == "Project":
     # latar belakang
     st.markdown("<h1 style='text-align: center; '>Apakah Industri Asuransi di Indonesia Survive selama Pandemi?</h1>",
@@ -105,6 +103,22 @@ if select == "Project":
             'Jenis Asuransi:',
             ('Life Insurance', 'General Insurance', 'Reinsurance', 'Social Insurance', 'Mandatory Insurance'))
     st.write("")
+    
+    st.markdown("<h4 style='text-align: center; '>Statistika Deskriptif</h4>", unsafe_allow_html=True)
+    kolumn1, kolumn2, kolumn3 = st.columns([1,3,1])
+    if choose == 'Life Insurance':
+        df = pd.DataFrame(list(zip(premi["LI_pendapatan_premi"], klaim["LI_klaim_terbayar"], float["LI_float"])), columns=["Premi Bruto", "Klaim Bruto","Insurance Float"])
+    elif choose == 'General Insurance':
+        df = pd.DataFrame(list(zip(premi["GI_pendapatan_premi"], klaim["GI_klaim_terbayar"], float["GI_float"])), columns=["Premi Bruto", "Klaim Bruto","Insurance Float"])
+    elif choose == 'Reinsurance':
+        df = pd.DataFrame(list(zip(premi["RE_pendapatan_premi"], klaim["RE_klaim_terbayar"], float["RE_float"])), columns=["Premi Bruto", "Klaim Bruto","Insurance Float"])
+    elif choose == 'Social Insurance':
+        df = pd.DataFrame(list(zip(premi["SI_pendapatan_premi"], klaim["SI_klaim_terbayar"], float["SI_float"])), columns=["Premi Bruto", "Klaim Bruto","Insurance Float"])
+    elif choose == 'Mandatory Insurance':
+        df = pd.DataFrame(list(zip(premi["MI_pendapatan_premi"], klaim["MI_klaim_terbayar"], float["MI_float"])), columns=["Premi Bruto", "Klaim Bruto","Insurance Float"])
+    with kolumn2:
+        st.write(df.describe())
+    
     #line chart premi
     st.markdown("<h4 style='text-align: center; '>Perkembangan Pendapatan Premi 2016-2021</h4>", unsafe_allow_html=True)
     line_data1 = premi.copy()
