@@ -1,3 +1,3 @@
 ## Streamlit Project
 
-[You can reach the application here.](https://pamellacathryn-capstone-project-data-dash-6cdl7o.streamlitapp.com/)
+[You can reach the application here.](https://pamellacathryn-analisis-kestabilan-pemasukan-f-data-dash-4u8yq5.streamlitapp.com/)
