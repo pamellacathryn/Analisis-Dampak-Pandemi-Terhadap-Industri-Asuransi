@@ -4,6 +4,8 @@ import altair as alt
 import plotly.express as px
 from streamlit_option_menu import option_menu
 
+st.markdown('<style>#vg-tooltip-element{z-index: 1000051}</style>', unsafe_allow_html=True)
+
 # dataset
 perusahaan = pd.read_csv('perusahaan.csv')
 premi = pd.read_csv('pendapatan_premi.csv')
