@@ -363,7 +363,7 @@ if select == "Project":
     st.write(" ")
 
     st.header("Saran")
-    st.markdown('<div style="text-align: justify;">Meskipun kestabilan pemasukan float beberapa perusahaan asuransi konvensional terguncang oleh pandemi covid-19, industri asuransi di Indonesia berhasil bertahan. Komisaris Utama IFG, Fauzi Ichsan, percaya bahwa potensi pertumbuhan industri asuransi di Indonesia masih besar. Kedepannya, perusahaan asuransi juga harus memperhatikan peningkatan kualitas SDM dengan pengembangan kapasitas aktuarial, mengakselerasikan IT platform, memperketat modal minimum, dan lain-lain.</div>', unsafe_allow_html=True)
+    st.markdown('<div style="text-align: justify;">Meskipun kestabilan pemasukan float beberapa perusahaan asuransi konvensional terguncang oleh pandemi covid-19, industri asuransi di Indonesia berhasil bertahan. Komisaris Utama IFG, Fauzi Ichsan, percaya bahwa potensi pertumbuhan industri asuransi di Indonesia masih besar. Kedepannya, perusahaan asuransi juga perlu memperhatikan peningkatan kualitas SDM dengan pengembangan kapasitas aktuarial, mengakselerasikan IT platform, memperketat modal minimum, dan lain-lain.</div>', unsafe_allow_html=True)
         
 elif select == "Glossary":
     st.subheader("Glossary")
