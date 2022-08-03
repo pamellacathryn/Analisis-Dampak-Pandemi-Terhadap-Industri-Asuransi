@@ -360,7 +360,11 @@ if select == "Project":
         st.markdown('<div style="text-align: justify;">Dari control chart, dapat terlihat bahwa sejak pandemi dimulai, semua titik insurance float industri asuransi sosial berada di atas garis rata-rata (OOC), terlihat juga bahwa kondisi insurance float sebelum pandemi malah cenderung di bawah garis rata-rata. Hal ini mengindikasikan adanya kenaikan pemasukan float yang cukup besar setelah mulainya pandemi. Oleh sebab itu, dapat disimpulkan bahwa pandemi covid-19 memberikan dampak yang signifikan terhadap kestabilan pemasukan float industri asuransi sosial. Hal ini dapat disebabkan oleh peningkatan jumlah nasabah selama pandemi karena premi dari jasa asuransi sosial cenderung lebih murah daripada jasa asuransi lainnya. Asuransi sosial pun tidak bertujuan mencari keuntungan sehingga menarik masyarakat yang ingin berasuransi saat pandemi.</div>', unsafe_allow_html=True)
     elif choose == 'Mandatory Insurance':
         st.markdown('<div style="text-align: justify;">Asuransi ASN, TNI/POLRI, Kecelakaan Penumpang Umum dan Lalu Lintas Jalan memang tidak bertujuan untuk mencari keuntungan, melainkan dibuat sebagai hak-hak yang disediakan oleh negara. Pada control chart, terlihat bahwa insurance float cenderung terus turun dari sebelum pandemi sampai setelah pandemi dimulai. Hal ini disebabkan oleh terus menaiknya jumlah klaim walaupun premi yang masuk cenderung konstan. Menurunnya insurance float setelah pandemi menembus garis batas bawah (OOC), sehingga dapat disimpulkan bahwa pandemi covid-19 memberikan dampak yang signifikan terhadap kestabilan pemasukan float mandatory insurance.</div>', unsafe_allow_html=True)
+    st.write(" ")
 
+    st.header("Saran")
+    st.markdown('<div style="text-align: justify;">Meskipun kestabilan pemasukan float beberapa perusahaan asuransi konvensional terguncang oleh pandemi covid-19, industri asuransi di Indonesia berhasil bertahan. Komisaris Utama IFG, Fauzi Ichsan, percaya bahwa potensi pertumbuhan industri asuransi di Indonesia masih besar. Kedepannya, perusahaan asuransi juga harus memperhatikan peningkatan kualitas SDM dengan pengembangan kapasitas aktuarial, mengakselerasikan IT platform, memperketat modal minimum, dan lain-lain.</div>', unsafe_allow_html=True)
+        
 elif select == "Glossary":
     st.subheader("Glossary")
     a=1
