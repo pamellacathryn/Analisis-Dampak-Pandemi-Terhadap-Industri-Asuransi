@@ -10,6 +10,8 @@ st.markdown('<style>#vg-tooltip-element{z-index: 1000051}</style>', unsafe_allow
 perusahaan = pd.read_csv('perusahaan.csv')
 premi = pd.read_csv('pendapatan_premi.csv')
 klaim = pd.read_csv('klaim_terbayar.csv')
+premi["Total_premi"] = premi["LI_pendapatan_premi"]+premi["GI_pendapatan_premi"]+premi["RE_pendapatan_premi"]+premi["SI_pendapatan_premi"]+premi["MI_pendapatan_premi"]
+klaim["Total_klaim"] = klaim["LI_klaim_terbayar"]+klaim["GI_klaim_terbayar"]+klaim["RE_klaim_terbayar"]+klaim["SI_klaim_terbayar"]+klaim["MI_klaim_terbayar"]
 float_1 = pd.merge(premi, klaim, how='left', on='bulan')
 float = pd.DataFrame(list(zip(
     float_1["bulan"],
@@ -17,8 +19,9 @@ float = pd.DataFrame(list(zip(
     float_1["GI_pendapatan_premi"]-float_1["GI_klaim_terbayar"],
     float_1["RE_pendapatan_premi"]-float_1["RE_klaim_terbayar"],
     float_1["SI_pendapatan_premi"]-float_1["SI_klaim_terbayar"],
-    float_1["MI_pendapatan_premi"]-float_1["MI_klaim_terbayar"]
-)), columns = ["bulan","LI_float","GI_float","RE_float","SI_float","MI_float"])
+    float_1["MI_pendapatan_premi"]-float_1["MI_klaim_terbayar"],
+    float_1["Total_premi"]-float_1["Total_klaim"]
+)), columns = ["bulan","LI_float","GI_float","RE_float","SI_float","MI_float","Total_float"])
 
 with st.sidebar:
     st.header("Navigation")
@@ -30,6 +33,8 @@ with st.sidebar:
     )
     st.header("About")
     st.info("This web app is made by Pamella Cathryn. You can follow me on [LinkedIn](https://linkedin.com/in/pamellacathryn) | [Instagram](https://instagram.com/pamellacathryn) | [GitHub](https://github.com/pamellacathryn)")
+
+
 
 if select == "Project":
     # latar belakang
@@ -48,7 +53,7 @@ if select == "Project":
     st.markdown('<div style="text-align: justify;"></div>', unsafe_allow_html=True)
     st.markdown('<div style="text-align: justify;">Terjadinya pandemi Covid-19 berdampak langsung pada sektor-sektor finansial, termasuk pada Industri Asuransi. Pandemi Covid-19 juga menyebabkan resesi global pada tahun 2020. Resesi ini merupakan resesi terburuk di dunia sejak tahun 1930-an. Hal inilah yang menyebabkan nasabah-nasabah ragu untuk menaruh uang mereka untuk membayar premi asuransi dan pemasukan perusahaan asuransi pun menurun. Pada Kesempatan ini, akan dilakukan analisis apakah Pandemi Covid-19 memengaruhi pemasukan insurance float Industri Asuransi secara signifikan.</div>', unsafe_allow_html=True)
     st.markdown('<div style="text-align: justify;"></div>', unsafe_allow_html=True)
-
+    st.markdown("""---""")
     st.header("Hasil Analisis")
     #pie chart
     col1, col2 = st.columns([2,3])
@@ -62,8 +67,7 @@ if select == "Project":
     col2.markdown('<div style="text-align: justify;">Dikutip dari Badan Pusat Statistik, saat ini (per 31 Desember 2021) terdapat 149 unit perusahaan asuransi konvensional di Indonesia. Secara rinci, sebanyak 77 unit merupakan perusahaan asuransi umum, 60 unit perusahaan asuransi jiwa, 7 unit perusahaan reasuransi, 2 unit perusahaan penyelenggara program asuransi sosial dan jaminan sosial tenaga kerja, serta 3 perusahaan sisanya merupakan penyelenggara asuransi untuk PNS dan TNI/Polri.</div>', unsafe_allow_html=True)
 
     #linechart function
-    def get_chart(data,x,color,judul,comment,ylabel):
-        a = data.columns[x]
+    def get_chart(data):
         hover = alt.selection_single(
             fields=["bulan"],
             nearest=True,
@@ -71,12 +75,12 @@ if select == "Project":
             empty="none",
         )
         lines = (
-            alt.Chart(data, title=judul)
+            alt.Chart(data)
             .mark_line()
             .encode(
                 x="bulan",
-                y=alt.Y(a, title=ylabel),
-                color=alt.value(color),
+                y=alt.Y("in Millions Rupiah", title="in Millions Rupiah"),
+                color=alt.Color("Legend", sort=['Premi Bruto'], scale=alt.Scale(range=["#01AEC6", "#F4A261"]))
             )
         )
         points = lines.transform_filter(hover).mark_circle(size=65)
@@ -85,17 +89,17 @@ if select == "Project":
             .mark_rule()
             .encode(
                 x="bulan",
-                y=a,
+                y="in Millions Rupiah",
                 opacity=alt.condition(hover, alt.value(0.3), alt.value(0)),
                 tooltip=[
-                    alt.Tooltip("bulan", timeUnit="yearmonth", title="Bulan"),
-                    alt.Tooltip(a, title=comment),
+                    alt.Tooltip("bulan", title="Bulan"),
+                    alt.Tooltip("in Millions Rupiah", title="Value"),
                 ],
             )
             .add_selection(hover)
         )
         xrule = alt.Chart(data).mark_rule().encode(
-            x=alt.Y('bulan_covid', title="bulan"),
+            x=alt.Y('bulan_covid', title="Bulan"),
             size=alt.value(1),
             color=alt.value("#f69697"),
         )
@@ -103,9 +107,9 @@ if select == "Project":
 
     choose = st.selectbox(
             'Jenis Asuransi:',
-            ('Life Insurance', 'General Insurance', 'Reinsurance', 'Social Insurance', 'Mandatory Insurance'))
+            ('Life Insurance', 'General Insurance', 'Reinsurance', 'Social Insurance', 'Mandatory Insurance','Total'))
     st.write("")
-    
+
     st.markdown("<h4 style='text-align: center; '>Statistika Deskriptif</h4>", unsafe_allow_html=True)
     kolumn1, kolumn2, kolumn3 = st.columns([1,3,1])
     if choose == 'Life Insurance':
@@ -118,83 +122,62 @@ if select == "Project":
         df = pd.DataFrame(list(zip(premi["SI_pendapatan_premi"], klaim["SI_klaim_terbayar"], float["SI_float"])), columns=["Premi Bruto", "Klaim Bruto","Insurance Float"])
     elif choose == 'Mandatory Insurance':
         df = pd.DataFrame(list(zip(premi["MI_pendapatan_premi"], klaim["MI_klaim_terbayar"], float["MI_float"])), columns=["Premi Bruto", "Klaim Bruto","Insurance Float"])
+    elif choose == 'Total':
+        df = pd.DataFrame(list(zip(premi["Total_premi"], klaim["Total_klaim"], float["Total_float"])), columns=["Premi Bruto", "Klaim Bruto", "Insurance Float"])
     with kolumn2:
         st.write(df.describe())
-    
-    #line chart premi
-    st.markdown("<h4 style='text-align: center; '>Perkembangan Pendapatan Premi 2016-2021</h4>", unsafe_allow_html=True)
+
+    #line chart
+    st.markdown("<h4 style='text-align: center; '>Perkembangan Premi dan Klaim 2016-2021</h4>", unsafe_allow_html=True)
     line_data1 = premi.copy()
     line_data1["bulan"] = pd.to_datetime(line_data1["bulan"])
     line_data1["bulan_covid"] = [pd.to_datetime("2020-03-01") for i in range(len(line_data1))]
-    line_data1 = line_data1.rename(columns={'LI_pendapatan_premi':'Life Insurance (in Millions Rupiah)','GI_pendapatan_premi':'General Insurance (in Millions Rupiah)','RE_pendapatan_premi':'Reinsurance (in Millions Rupiah)','SI_pendapatan_premi':'Social Insurance (in Millions Rupiah)','MI_pendapatan_premi':'Mandatory Insurance (in Millions Rupiah)'})
-    if choose == 'Life Insurance':
-        posisi = -220
-        p = 1
-        color = '#457b9d'
-    elif choose == 'General Insurance':
-        posisi = -220
-        p = 2
-        color = '#2A9D8F'
-    elif choose == 'Reinsurance':
-        posisi = -220
-        p = 3
-        color = '#E9C46A'
-    elif choose == 'Social Insurance':
-        posisi = -220
-        p = 4
-        color = '#F4A261'
-    elif choose == 'Mandatory Insurance':
-        posisi = -215
-        p = 5
-        color = '#E76F51'
-    chart = get_chart(line_data1,p,color,"","Premi Bruto",'Premi Bruto (in Millions Rupiah)')
-    ANNOTATIONS = [
-        ("Mar 2020", "Awal Pandemi Covid-19"),
-    ]
-    annotations_df = pd.DataFrame(ANNOTATIONS, columns=["date", "event"])
-    annotations_df.date = pd.to_datetime(annotations_df.date)
-    annotations_df["y"] = 10
-    annotation_layer = (
-        alt.Chart(annotations_df)
-        .mark_text(size=25, text="👇🏼", dx=-20, dy=posisi, align="left")
-        .encode(
-            x="date:T",
-            y=alt.Y("y:Q"),
-            tooltip=["event"],
-        )
-        .interactive()
-    )
-    st.altair_chart(
-        (chart + annotation_layer).interactive(),
-        use_container_width=True)
-
-    #line chart klaim
-    st.markdown("<h4 style='text-align: center; '>Perkembangan Klaim Dibayar 2016-2021</h4>", unsafe_allow_html=True)
     line_data2 = klaim.copy()
     line_data2["bulan"] = pd.to_datetime(line_data2["bulan"])
     line_data2["bulan_covid"] = [pd.to_datetime("2020-03-01") for i in range(len(line_data2))]
-    line_data2 = line_data2.rename(columns={'LI_klaim_terbayar':'Life Insurance (in Millions Rupiah)','GI_klaim_terbayar':'General Insurance (in Millions Rupiah)','RE_klaim_terbayar':'Reinsurance (in Millions Rupiah)','SI_klaim_terbayar':'Social Insurance (in Millions Rupiah)','MI_klaim_terbayar':'Mandatory Insurance (in Millions Rupiah)'})
     if choose == 'Life Insurance':
-        posisi = -215
-        p = 1
-        color = '#457b9d'
-    elif choose == 'General Insurance':
+        data1 = pd.DataFrame(list(zip(line_data1["bulan"], line_data1["LI_pendapatan_premi"], line_data2["LI_klaim_terbayar"])),
+                             columns=["bulan", "Premi Bruto", "Klaim Bruto"])
+        data1_melted = pd.melt(data1, id_vars=['bulan'], var_name='Legend', value_name='in Millions Rupiah')
+        data1_melted["bulan_covid"] = [pd.to_datetime("2020-03-01") for i in range(len(data1_melted))]
+        data = data1_melted
         posisi = -220
-        p = 2
-        color = '#2A9D8F'
+    elif choose == 'General Insurance':
+        data2 = pd.DataFrame(list(zip(line_data1["bulan"], line_data1["GI_pendapatan_premi"], line_data2["GI_klaim_terbayar"])),
+                             columns=["bulan", "Premi Bruto", "Klaim Bruto"])
+        data2_melted = pd.melt(data2, id_vars=['bulan'], var_name='Legend', value_name='in Millions Rupiah')
+        data2_melted["bulan_covid"] = [pd.to_datetime("2020-03-01") for i in range(len(data2_melted))]
+        data = data2_melted
+        posisi = -220
     elif choose == 'Reinsurance':
-        posisi = -215
-        p = 3
-        color = '#E9C46A'
+        data3 = pd.DataFrame(list(zip(line_data1["bulan"], line_data1["RE_pendapatan_premi"], line_data2["RE_klaim_terbayar"])),
+                             columns=["bulan", "Premi Bruto", "Klaim Bruto"])
+        data3_melted = pd.melt(data3, id_vars=['bulan'], var_name='Legend', value_name='in Millions Rupiah')
+        data3_melted["bulan_covid"] = [pd.to_datetime("2020-03-01") for i in range(len(data3_melted))]
+        data = data3_melted
+        posisi = -220
     elif choose == 'Social Insurance':
-        posisi = -215
-        p = 4
-        color = '#F4A261'
+        data4 = pd.DataFrame(list(zip(line_data1["bulan"], line_data1["SI_pendapatan_premi"], line_data2["SI_klaim_terbayar"])),
+                             columns=["bulan", "Premi Bruto", "Klaim Bruto"])
+        data4_melted = pd.melt(data4, id_vars=['bulan'], var_name='Legend', value_name='in Millions Rupiah')
+        data4_melted["bulan_covid"] = [pd.to_datetime("2020-03-01") for i in range(len(data4_melted))]
+        data = data4_melted
+        posisi = -220
     elif choose == 'Mandatory Insurance':
+        data5 = pd.DataFrame(list(zip(line_data1["bulan"], line_data1["MI_pendapatan_premi"], line_data2["MI_klaim_terbayar"])),
+                             columns=["bulan", "Premi Bruto", "Klaim Bruto"])
+        data5_melted = pd.melt(data5, id_vars=['bulan'], var_name='Legend', value_name='in Millions Rupiah')
+        data5_melted["bulan_covid"] = [pd.to_datetime("2020-03-01") for i in range(len(data5_melted))]
+        data = data5_melted
         posisi = -215
-        p = 5
-        color = '#E76F51'
-    chart = get_chart(line_data2,p,color,"","Klaim Bruto",'Klaim Bruto (in Millions Rupiah)')
+    elif choose == 'Total':
+        data6 = pd.DataFrame(list(zip(line_data1["bulan"], line_data1["Total_premi"], line_data2["Total_klaim"])),
+                             columns=["bulan", "Premi Bruto", "Klaim Bruto"])
+        data6_melted = pd.melt(data6, id_vars=['bulan'], var_name='Legend', value_name='in Millions Rupiah')
+        data6_melted["bulan_covid"] = [pd.to_datetime("2020-03-01") for i in range(len(data6_melted))]
+        data = data6_melted
+        posisi = -215
+    chart = get_chart(data)
     ANNOTATIONS = [
         ("Mar 2020", "Awal Pandemi Covid-19"),
     ]
@@ -263,7 +246,7 @@ if select == "Project":
             color=alt.value("#6b6e70"),
         )
         xrule = alt.Chart(data).mark_rule().encode(
-            x=alt.Y('bulan_covid', title="bulan"),
+            x=alt.Y('bulan_covid', title="Bulan"),
             size=alt.value(1),
             color=alt.value("#f69697"),
         )
@@ -278,6 +261,7 @@ if select == "Project":
     line_data3['RE_avg'] = [line_data3["RE_float"].mean() for i in range(len(line_data3))]
     line_data3['SI_avg'] = [line_data3["SI_float"].mean() for i in range(len(line_data3))]
     line_data3['MI_avg'] = [line_data3["MI_float"].mean() for i in range(len(line_data3))]
+    line_data3['Total_avg'] = [line_data3["Total_float"].mean() for i in range(len(line_data3))]
 
     data1 = pd.DataFrame(list(zip(line_data3["bulan"],line_data3["LI_float"])), columns=["bulan","LI_float"])
     data1["ba"] = [data1["LI_float"].mean()+(3/(len(data1)**(1/2)))*(data1["LI_float"].max()-data1["LI_float"].min()) for i in range(len(data1))]
@@ -299,36 +283,40 @@ if select == "Project":
     data5["ba"] = [data5["MI_float"].mean()+(3/(len(data5)**(1/2)))*(data5["MI_float"].max()-data5["MI_float"].min()) for i in range(len(data5))]
     data5["bb"] = [data5["MI_float"].mean()-(3/(len(data5)**(1/2)))*(data5["MI_float"].max()-data5["MI_float"].min()) for i in range(len(data5))]
     data5["bulan_covid"] = [pd.to_datetime("2020-03-01") for i in range(len(data1))]
+    data6 = pd.DataFrame(list(zip(line_data3["bulan"],line_data3["Total_float"])), columns=["bulan","Total_float"])
+    data6["ba"] = [data6["Total_float"].mean()+(3/(len(data6)**(1/2)))*(data6["Total_float"].max()-data6["Total_float"].min()) for i in range(len(data6))]
+    data6["bb"] = [data6["Total_float"].mean()-(3/(len(data6)**(1/2)))*(data6["Total_float"].max()-data6["Total_float"].min()) for i in range(len(data6))]
+    data6["bulan_covid"] = [pd.to_datetime("2020-03-01") for i in range(len(data1))]
 
-    line_data3 = line_data3.rename(columns={'LI_float':'Life Insurance (in Millions Rupiah)','GI_float':'General Insurance (in Millions Rupiah)','RE_float':'Reinsurance (in Millions Rupiah)','SI_float':'Social Insurance (in Millions Rupiah)','MI_float':'Mandatory Insurance (in Millions Rupiah)'})
+
+    line_data3 = line_data3.rename(columns={'LI_float':'Life Insurance (in Millions Rupiah)','GI_float':'General Insurance (in Millions Rupiah)','RE_float':'Reinsurance (in Millions Rupiah)','SI_float':'Social Insurance (in Millions Rupiah)','MI_float':'Mandatory Insurance (in Millions Rupiah)','Total_float':'Total (in Millions Rupiah)'})
 
     if choose == 'Life Insurance':
         posisi = -150
         data1 = data1.rename(columns={'LI_float':'in Millions Rupiah'})
         data = data1
-        color = '#457b9d'
     elif choose == 'General Insurance':
         posisi = -220
         data2 = data2.rename(columns={'GI_float':'in Millions Rupiah'})
         data = data2
-        color = '#2A9D8F'
     elif choose == 'Reinsurance':
         posisi = -150
         data3 = data3.rename(columns={'RE_float':'in Millions Rupiah'})
         data = data3
-        color = '#E9C46A'
     elif choose == 'Social Insurance':
         posisi = -180
         data4 = data4.rename(columns={'SI_float':'in Millions Rupiah'})
         data = data4
-        color = '#F4A261'
     elif choose == 'Mandatory Insurance':
         posisi = -30
         data5 = data5.rename(columns={'MI_float':'in Millions Rupiah'})
         data = data5
-        color = '#E76F51'
+    elif choose == 'Total':
+        posisi = -215
+        data6 = data6.rename(columns={'Total_float':'in Millions Rupiah'})
+        data = data6
 
-    chart = get_chart3(data,color)
+    chart = get_chart3(data,"#2A9D8F")
     ANNOTATIONS = [
         ("Mar 2020", "Awal Pandemi Covid-19"),
     ]
@@ -349,7 +337,7 @@ if select == "Project":
         (chart + annotation_layer).interactive(),
         use_container_width=True)
 
-    st.header("Kesimpulan")
+    st.header("Pembahasan")
     if choose == 'Life Insurance':
         st.markdown('<div style="text-align: justify;">Dari control chart, dapat terlihat bahwa insurance float industri asuransi jiwa setelah memasuki periode pandemi covid-19 cenderung berada di antara garis rata-rata (avg) dan garis batas bawah. Karena terdapat delapan titik berturut-turut jatuh pada daerah tersebut dan terdapat satu titik yang berada di bawah garis batas bawah, maka dapat ditarik kesimpulan bahwa insurance float industri asuransi jiwa berstatus out of control (OOC). Dengan kata lain, pandemi covid-19 memberikan dampak yang signifikan terhadap kestabilan pemasukan float industri asuransi jiwa. Hal ini mungkin saja terjadi akibat kenaikan jumlah klaim asuransi yang disebabkan oleh kematian dari virus covid-19.</div>', unsafe_allow_html=True)
     elif choose == 'General Insurance':
@@ -360,11 +348,14 @@ if select == "Project":
         st.markdown('<div style="text-align: justify;">Dari control chart, dapat terlihat bahwa sejak pandemi dimulai, semua titik insurance float industri asuransi sosial berada di atas garis rata-rata (OOC), terlihat juga bahwa kondisi insurance float sebelum pandemi malah cenderung di bawah garis rata-rata. Hal ini mengindikasikan adanya kenaikan pemasukan float yang cukup besar setelah mulainya pandemi. Oleh sebab itu, dapat disimpulkan bahwa pandemi covid-19 memberikan dampak yang signifikan terhadap kestabilan pemasukan float industri asuransi sosial. Hal ini dapat disebabkan oleh peningkatan jumlah nasabah selama pandemi karena premi dari jasa asuransi sosial cenderung lebih murah daripada jasa asuransi lainnya. Asuransi sosial pun tidak bertujuan mencari keuntungan sehingga menarik masyarakat yang ingin berasuransi saat pandemi.</div>', unsafe_allow_html=True)
     elif choose == 'Mandatory Insurance':
         st.markdown('<div style="text-align: justify;">Asuransi ASN, TNI/POLRI, Kecelakaan Penumpang Umum dan Lalu Lintas Jalan memang tidak bertujuan untuk mencari keuntungan, melainkan dibuat sebagai hak-hak yang disediakan oleh negara. Pada control chart, terlihat bahwa insurance float cenderung terus turun dari sebelum pandemi sampai setelah pandemi dimulai. Hal ini disebabkan oleh terus menaiknya jumlah klaim walaupun premi yang masuk cenderung konstan. Menurunnya insurance float setelah pandemi menembus garis batas bawah (OOC), sehingga dapat disimpulkan bahwa pandemi covid-19 memberikan dampak yang signifikan terhadap kestabilan pemasukan float mandatory insurance.</div>', unsafe_allow_html=True)
-    st.write(" ")
+    elif choose == 'Total':
+        st.markdown('<div style="text-align: justify;">Dari control chart, terlihat bahwa sebelum dan setelah memasuki periode pandemi, insurance float dari keseluruhan industri asuransi tidak mengalami perubahan variansi yang signifikan dan tidak menunjukkan adanya indikasi out of control (OOC). Sehingga, dapat disimpulkan bahwa pandemi covid-19 tidak mempengaruhi pemasukan float industri asuransi secara keseluruhan.</div>', unsafe_allow_html=True)
 
-    st.header("Saran")
-    st.markdown('<div style="text-align: justify;">Meskipun kestabilan pemasukan float beberapa perusahaan asuransi konvensional terguncang oleh pandemi covid-19, industri asuransi di Indonesia berhasil bertahan. Komisaris Utama IFG, Fauzi Ichsan, percaya bahwa potensi pertumbuhan industri asuransi di Indonesia masih besar. Kedepannya, perusahaan asuransi perlu memperhatikan peningkatan kualitas SDM dengan pengembangan kapasitas aktuarial, mengakselerasikan IT platform, memperketat modal minimum, dan lain-lain.</div>', unsafe_allow_html=True)
-        
+    st.write(" ")
+    st.markdown("""---""")
+    st.header("Kesimpulan dan Saran")
+    st.markdown('<div style="text-align: justify;">Meskipun kestabilan pemasukan float asuransi konvensional (selain Asuransi Umum) terguncang oleh pandemi covid-19, secara keseluruhan, industri asuransi di Indonesia berhasil bertahan. Komisaris Utama Indonesia Financial Group (IFG), Fauzi Ichsan, percaya bahwa potensi pertumbuhan industri asuransi di Indonesia masih besar. Kedepannya, perusahaan asuransi perlu memperhatikan peningkatan kualitas SDM dengan pengembangan kapasitas aktuarial, mengakselerasikan IT platform, memperketat modal minimum, dan lain-lain.</div>', unsafe_allow_html=True)
+
 elif select == "Glossary":
     st.subheader("Glossary")
     a=1
